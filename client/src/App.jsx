@@ -21,7 +21,7 @@ function App() {
       formData.append("pdf", file);
 
       await axios.post(
-        "http://localhost:8000/api/upload",
+        `${import.meta.env.VITE_API_URL}/api/upload`,
         formData
       );
 
@@ -45,7 +45,7 @@ function App() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:8000/api/chat",
+        `${import.meta.env.VITE_API_URL}/api/chat`,
         {
           question,
         }
@@ -112,9 +112,7 @@ function App() {
         </button>
       </div>
 
-      {loading && (
-        <p>Loading...</p>
-      )}
+      {loading && <p>Loading...</p>}
 
       {answer && (
         <div

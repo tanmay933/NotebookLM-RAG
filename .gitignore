@@ -1,6 +1,8 @@
 # dependencies
 node_modules/
 
+client/.env
+server/.env
 # production
 dist/
 build/
