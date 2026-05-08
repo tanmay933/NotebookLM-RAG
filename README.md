@@ -1,6 +1,6 @@
 # NotebookLM RAG
 
-A simple RAG (Retrieval-Augmented Generation) application inspired by Google NotebookLM where users can upload PDF documents and ask natural language questions grounded in the uploaded document.
+A full-stack Retrieval-Augmented Generation (RAG) application inspired by Google NotebookLM where users can upload PDF documents and ask natural language questions grounded entirely in the uploaded document content.
 
 ---
 
@@ -8,10 +8,12 @@ A simple RAG (Retrieval-Augmented Generation) application inspired by Google Not
 
 - Upload PDF documents
 - Extract and chunk document text
-- Retrieve relevant chunks based on user query
-- Generate grounded answers using an LLM
-- Simple React frontend
-- Node.js + Express backend
+- Generate semantic embeddings using HuggingFace
+- Store vectors persistently in Qdrant Vector Database
+- Semantic retrieval using vector similarity search
+- Grounded answer generation using OpenRouter LLMs
+- Stateless backend architecture compatible with serverless deployment
+- Simple React frontend UI
 
 ---
 
@@ -27,31 +29,89 @@ A simple RAG (Retrieval-Augmented Generation) application inspired by Google Not
 - Express
 - Multer
 - LangChain
+- HuggingFace Inference API
+- Qdrant Vector Database
 - OpenRouter API
+
+---
+
+# Architecture
+
+```text
+PDF Upload
+    ↓
+Text Extraction
+    ↓
+Chunking
+    ↓
+Embedding Generation
+    ↓
+Qdrant Vector Storage
+    ↓
+Semantic Retrieval
+    ↓
+LLM Grounded Answer
+```
 
 ---
 
 # RAG Pipeline
 
-The application follows a complete Retrieval-Augmented Generation pipeline:
+The application implements a complete Retrieval-Augmented Generation pipeline:
 
 1. PDF Upload
-2. Text Extraction
+2. PDF Text Extraction
 3. Chunking using RecursiveCharacterTextSplitter
-4. Chunk Storage
-5. Retrieval using similarity-based scoring
-6. LLM Response Generation using retrieved context
+4. Embedding Generation using HuggingFace
+5. Persistent Vector Storage using Qdrant
+6. Semantic Similarity Retrieval
+7. Grounded Answer Generation using OpenRouter
 
 ---
 
 # Chunking Strategy
 
-The project uses LangChain's RecursiveCharacterTextSplitter to split documents into manageable chunks before retrieval.
+The project uses LangChain's `RecursiveCharacterTextSplitter`.
+
+Configuration:
+
+```js
+chunkSize: 1000
+chunkOverlap: 200
+```
 
 This improves:
-- retrieval accuracy
-- context management
-- grounded response quality
+- semantic retrieval quality
+- contextual continuity
+- grounded response accuracy
+
+---
+
+# Vector Database
+
+The application uses Qdrant Cloud as the vector database.
+
+Features:
+- persistent vector storage
+- semantic similarity search
+- metadata filtering using documentId
+- cloud-hosted deployment
+
+---
+
+# Deployment Architecture
+
+The backend is designed to be stateless and serverless-compatible.
+
+Key improvements:
+- Removed in-memory chunk storage
+- Removed filesystem upload dependency
+- Uses memory-based PDF processing
+- Persistent vector storage through Qdrant Cloud
+
+Compatible with:
+- Vercel
+- Serverless deployments
 
 ---
 
@@ -67,8 +127,18 @@ This improves:
 notebooklm-rag/
 │
 ├── client/
+│
 ├── server/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── server.js
+│
 ├── screenshots/
+│
 └── README.md
 ```
 
@@ -79,12 +149,12 @@ notebooklm-rag/
 ## Clone Repository
 
 ```bash
-git clone <your-github-repo>
+git clone https://github.com/tanmay933/NotebookLM-RAG.git
 ```
 
 ---
 
-## Frontend Setup
+# Frontend Setup
 
 ```bash
 cd client
@@ -94,7 +164,7 @@ npm run dev
 
 ---
 
-## Backend Setup
+# Backend Setup
 
 ```bash
 cd server
@@ -106,11 +176,20 @@ npm run dev
 
 # Environment Variables
 
-Create a `.env` file inside `server/`
+## Server `.env`
 
 ```env
 PORT=8000
-OPENROUTER_API_KEY=your_api_key
+
+OPENROUTER_API_KEY=your_openrouter_key
+
+HF_API_KEY=your_huggingface_key
+
+QDRANT_URL=your_qdrant_url
+
+QDRANT_API_KEY=your_qdrant_api_key
+
+QDRANT_COLLECTION=notebooklm
 ```
 
 ---
@@ -123,7 +202,7 @@ OPENROUTER_API_KEY=your_api_key
 POST /api/upload
 ```
 
-Uploads and processes PDF document.
+Uploads, parses, chunks, embeds, and stores document vectors.
 
 ---
 
@@ -137,7 +216,8 @@ Request Body:
 
 ```json
 {
-  "question": "What is expected in the assignment?"
+  "question": "What are the requirements of the assignment?",
+  "documentId": "your-document-id"
 }
 ```
 
@@ -147,17 +227,20 @@ Request Body:
 
 - What is expected in the assignment?
 - What are the submission requirements?
-- What is the marking scheme?
 - Explain the RAG pipeline.
+- What is the marking scheme?
+- What technologies are required?
 
 ---
 
 # Future Improvements
 
-- Real vector database integration using Qdrant
-- Semantic embeddings
+- Streaming responses
 - Chat history
-- Multiple document support
+- Multi-document conversations
+- Better UI/UX
+- Citation highlighting
+- Reranking pipeline
 - Authentication
 
 ---
