@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
 import OpenAI from "openai";
 
@@ -10,32 +9,34 @@ const client = new OpenAI({
 
 const askLLM = async (question, chunks) => {
   const context = chunks
-    .map((chunk) => chunk.pageContent)
+    .map((chunk) => chunk.text)
     .join("\n\n");
 
-  const response = await client.chat.completions.create({
-    model: "openai/gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: `
+  const response =
+    await client.chat.completions.create({
+      model: "openai/gpt-3.5-turbo",
+
+      messages: [
+        {
+          role: "system",
+          content: `
 You are a PDF assistant.
 
-Only answer from the provided context.
+Only answer using the provided PDF context.
 
-If answer is not present in context, say:
+If the answer is not found in the context, say:
 "I could not find this information in the uploaded document."
 
 Context:
 ${context}
 `,
-      },
-      {
-        role: "user",
-        content: question,
-      },
-    ],
-  });
+        },
+        {
+          role: "user",
+          content: question,
+        },
+      ],
+    });
 
   return response.choices[0].message.content;
 };

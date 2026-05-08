@@ -3,13 +3,22 @@ import axios from "axios";
 
 function App() {
   const [file, setFile] = useState(null);
-  const [question, setQuestion] = useState("");
+
+  const [documentId, setDocumentId] =
+    useState("");
+
+  const [question, setQuestion] =
+    useState("");
+
   const [answer, setAnswer] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
 
   const uploadPDF = async () => {
     if (!file) {
       alert("Please select a PDF");
+
       return;
     }
 
@@ -20,10 +29,12 @@ function App() {
 
       formData.append("pdf", file);
 
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/upload`,
         formData
       );
+
+      setDocumentId(response.data.documentId);
 
       alert("PDF Uploaded Successfully");
     } catch (error) {
@@ -38,6 +49,13 @@ function App() {
   const askQuestion = async () => {
     if (!question) {
       alert("Please enter a question");
+
+      return;
+    }
+
+    if (!documentId) {
+      alert("Please upload a PDF first");
+
       return;
     }
 
@@ -48,6 +66,7 @@ function App() {
         `${import.meta.env.VITE_API_URL}/api/chat`,
         {
           question,
+          documentId,
         }
       );
 
@@ -72,11 +91,17 @@ function App() {
     >
       <h1>NotebookLM RAG</h1>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div
+        style={{
+          marginBottom: "20px",
+        }}
+      >
         <input
           type="file"
           accept="application/pdf"
-          onChange={(e) => setFile(e.target.files[0])}
+          onChange={(e) =>
+            setFile(e.target.files[0])
+          }
         />
 
         <button
@@ -89,12 +114,20 @@ function App() {
         </button>
       </div>
 
+      {documentId && (
+        <p>
+          PDF Ready for Questions
+        </p>
+      )}
+
       <div>
         <input
           type="text"
           placeholder="Ask a question..."
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+          onChange={(e) =>
+            setQuestion(e.target.value)
+          }
           style={{
             width: "70%",
             padding: "10px",

@@ -1,11 +1,32 @@
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
-const loadPDF = async (filePath) => {
-  const loader = new PDFLoader(filePath);
+const loadPDF = async (buffer) => {
+  const pdf = await pdfjsLib.getDocument({
+    data: new Uint8Array(buffer),
+  }).promise;
 
-  const docs = await loader.load();
+  let fullText = "";
 
-  return docs;
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+
+    const content = await page.getTextContent();
+
+    const text = content.items
+      .map((item) => item.str)
+      .join(" ");
+
+    fullText += text + "\n";
+  }
+
+  return [
+    {
+      pageContent: fullText,
+      metadata: {
+        pages: pdf.numPages,
+      },
+    },
+  ];
 };
 
 export default loadPDF;
