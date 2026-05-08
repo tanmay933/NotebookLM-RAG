@@ -1,13 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
-import fs from "fs";
-import path from "path";
-
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 import { storeChunksInQdrant } from "../services/vectorStoreService.js";
+
+import loadPDF from "../utils/pdfLoader.js";
 
 export const uploadPdf = async (req, res) => {
   try {
@@ -19,19 +16,7 @@ export const uploadPdf = async (req, res) => {
 
     const documentId = uuidv4();
 
-    const tempFilePath = path.join(
-      "/tmp",
-      req.file.originalname
-    );
-
-    fs.writeFileSync(
-      tempFilePath,
-      req.file.buffer
-    );
-
-    const loader = new PDFLoader(tempFilePath);
-
-    const docs = await loader.load();
+    const docs = await loadPDF(req.file.buffer);
 
     const splitter =
       new RecursiveCharacterTextSplitter({
@@ -47,8 +32,6 @@ export const uploadPdf = async (req, res) => {
       documentId,
       req.file.originalname
     );
-
-    fs.unlinkSync(tempFilePath);
 
     return res.status(200).json({
       message: "PDF uploaded successfully",
