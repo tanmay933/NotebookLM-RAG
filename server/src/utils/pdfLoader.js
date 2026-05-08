@@ -1,7 +1,7 @@
-import pdf from "pdf-parse";
+import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
 const loadPDF = async (buffer) => {
-  const data = await pdf(buffer);
+  const data = await pdfParse(buffer);
 
   return [
     {
