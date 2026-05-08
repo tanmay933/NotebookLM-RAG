@@ -4,6 +4,8 @@ import { qdrant } from "../config/qdrant.js";
 
 import { generateEmbedding } from "./embeddingService.js";
 
+const COLLECTION_NAME = "notebooklm";
+
 export const storeChunksInQdrant = async (
   chunks,
   documentId,
@@ -30,7 +32,7 @@ export const storeChunksInQdrant = async (
   }
 
   await qdrant.upsert(
-    process.env.QDRANT_COLLECTION,
+    COLLECTION_NAME,
     {
       wait: true,
       points,
@@ -48,7 +50,7 @@ export const retrieveChunksFromQdrant = async (
     await generateEmbedding(query);
 
   const searchResult = await qdrant.search(
-    process.env.QDRANT_COLLECTION,
+    COLLECTION_NAME,
     {
       vector: queryEmbedding,
       limit: 3,
