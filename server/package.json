@@ -17,7 +17,6 @@
     "@langchain/core": "^0.3.58",
     "@langchain/qdrant": "^0.1.0",
     "@langchain/textsplitters": "^0.1.0",
-    "@napi-rs/canvas": "^1.0.0",
     "@qdrant/js-client-rest": "^1.17.0",
     "axios": "^1.16.0",
     "cors": "^2.8.5",
