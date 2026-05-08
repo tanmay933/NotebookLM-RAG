@@ -34,7 +34,9 @@ function App() {
         formData
       );
 
-      setDocumentId(response.data.documentId);
+      setDocumentId(
+        response.data.documentId
+      );
 
       alert("PDF Uploaded Successfully");
     } catch (error) {

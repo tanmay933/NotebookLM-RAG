@@ -1,19 +1,21 @@
 # NotebookLM RAG
 
-A full-stack Retrieval-Augmented Generation (RAG) application inspired by Google NotebookLM where users can upload PDF documents and ask natural language questions grounded entirely in the uploaded document content.
+A full-stack Retrieval-Augmented Generation (RAG) application inspired by Google NotebookLM.
+
+Users can upload PDF documents and interact with them through natural language conversations powered by semantic retrieval and grounded LLM responses.
 
 ---
 
 # Features
 
-- Upload PDF documents
-- Extract and chunk document text
-- Generate semantic embeddings using HuggingFace
-- Store vectors persistently in Qdrant Vector Database
-- Semantic retrieval using vector similarity search
-- Grounded answer generation using OpenRouter LLMs
-- Stateless backend architecture compatible with serverless deployment
-- Simple React frontend UI
+- PDF document upload and processing
+- Semantic document chunking
+- Embedding generation for retrieval
+- Persistent vector storage using Qdrant Cloud
+- Context-aware semantic search
+- Grounded answer generation using LLMs
+- Serverless-compatible architecture
+- Simple and responsive React frontend
 
 ---
 
@@ -24,7 +26,7 @@ A full-stack Retrieval-Augmented Generation (RAG) application inspired by Google
 - Vite
 - Axios
 
-## Backend
+## Application Services
 - Node.js
 - Express
 - Multer
@@ -35,83 +37,63 @@ A full-stack Retrieval-Augmented Generation (RAG) application inspired by Google
 
 ---
 
-# Architecture
+# System Architecture
 
 ```text
 PDF Upload
     ↓
 Text Extraction
     ↓
-Chunking
+Semantic Chunking
     ↓
 Embedding Generation
     ↓
-Qdrant Vector Storage
+Vector Storage
     ↓
 Semantic Retrieval
     ↓
-LLM Grounded Answer
+Grounded LLM Response
 ```
 
 ---
 
 # RAG Pipeline
 
-The application implements a complete Retrieval-Augmented Generation pipeline:
+The application implements a complete Retrieval-Augmented Generation workflow:
 
-1. PDF Upload
-2. PDF Text Extraction
-3. Chunking using RecursiveCharacterTextSplitter
-4. Embedding Generation using HuggingFace
-5. Persistent Vector Storage using Qdrant
-6. Semantic Similarity Retrieval
-7. Grounded Answer Generation using OpenRouter
-
----
-
-# Chunking Strategy
-
-The project uses LangChain's `RecursiveCharacterTextSplitter`.
-
-Configuration:
-
-```js
-chunkSize: 1000
-chunkOverlap: 200
-```
-
-This improves:
-- semantic retrieval quality
-- contextual continuity
-- grounded response accuracy
+1. PDF ingestion
+2. Text extraction and preprocessing
+3. Recursive semantic chunking
+4. Embedding generation
+5. Persistent vector indexing
+6. Semantic similarity retrieval
+7. Context-grounded answer generation
 
 ---
 
-# Vector Database
+# Engineering Highlights
 
-The application uses Qdrant Cloud as the vector database.
-
-Features:
-- persistent vector storage
-- semantic similarity search
-- metadata filtering using documentId
-- cloud-hosted deployment
+- Stateless architecture optimized for serverless deployment
+- Persistent vector memory using Qdrant Cloud
+- Semantic retrieval using dense vector embeddings
+- Multi-document isolation support
+- Cloud-compatible PDF processing pipeline
+- Retrieval-grounded response generation to reduce hallucinations
 
 ---
 
 # Deployment Architecture
 
-The backend is designed to be stateless and serverless-compatible.
+The application is fully deployed using modern cloud infrastructure.
 
-Key improvements:
-- Removed in-memory chunk storage
-- Removed filesystem upload dependency
-- Uses memory-based PDF processing
-- Persistent vector storage through Qdrant Cloud
-
-Compatible with:
+## Frontend Hosting
 - Vercel
-- Serverless deployments
+
+## API Infrastructure
+- Vercel Serverless Functions
+
+## Vector Database
+- Qdrant Cloud
 
 ---
 
@@ -164,7 +146,7 @@ npm run dev
 
 ---
 
-# Backend Setup
+# Application Setup
 
 ```bash
 cd server
@@ -176,72 +158,66 @@ npm run dev
 
 # Environment Variables
 
-## Server `.env`
+Create a `.env` file inside the application directory and configure the required credentials for:
 
-```env
-PORT=8000
-
-OPENROUTER_API_KEY=your_openrouter_key
-
-HF_API_KEY=your_huggingface_key
-
-QDRANT_URL=your_qdrant_url
-
-QDRANT_API_KEY=your_qdrant_api_key
-
-QDRANT_COLLECTION=notebooklm
-```
+- LLM provider
+- Embedding provider
+- Vector database connection
 
 ---
 
-# API Routes
+# API Endpoints
 
-## Upload PDF
+## Upload Document
 
 ```http
 POST /api/upload
 ```
 
-Uploads, parses, chunks, embeds, and stores document vectors.
+Processes PDF documents and stores semantic vectors.
 
 ---
 
-## Ask Question
+## Ask Questions
 
 ```http
 POST /api/chat
 ```
 
-Request Body:
-
-```json
-{
-  "question": "What are the requirements of the assignment?",
-  "documentId": "your-document-id"
-}
-```
+Generates grounded answers using semantic retrieval and contextual response generation.
 
 ---
 
-# Sample Questions
+# Example Questions
 
-- What is expected in the assignment?
-- What are the submission requirements?
+- What are the requirements of the assignment?
 - Explain the RAG pipeline.
+- What technologies are used in the project?
 - What is the marking scheme?
-- What technologies are required?
+- What is expected in the submission?
+
+---
+
+# Engineering Challenges Solved
+
+- Serverless PDF processing on cloud infrastructure
+- Stateless retrieval architecture
+- Persistent semantic vector storage
+- AI workload deployment optimization
+- Semantic context retrieval pipeline
+- Multi-provider AI infrastructure integration
 
 ---
 
 # Future Improvements
 
 - Streaming responses
-- Chat history
+- Chat history persistence
 - Multi-document conversations
-- Better UI/UX
-- Citation highlighting
-- Reranking pipeline
-- Authentication
+- Source citation highlighting
+- Improved UI/UX
+- Authentication and user sessions
+- Advanced reranking pipeline
 
 ---
 
