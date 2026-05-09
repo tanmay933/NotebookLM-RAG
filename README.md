@@ -6,6 +6,13 @@ Users can upload PDF documents and interact with them through natural language c
 
 ---
 
+# Live Demo
+
+Frontend:  
+https://notebook-lm-rag-yiki.vercel.app
+
+---
+
 # Features
 
 - PDF document upload and processing
