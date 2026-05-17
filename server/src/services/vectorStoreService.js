@@ -68,6 +68,9 @@ export const retrieveChunksFromQdrant = async (
   );
 
   return searchResult.map(
-    (result) => result.payload
+    (result) => ({
+      ...result.payload,
+      score: result.score,
+    })
   );
 };
