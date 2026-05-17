@@ -25,8 +25,6 @@ export const chatWithPdf = async (
         documentId
       );
 
-    console.log(chunks);
-
     if (
       !chunks.length ||
       chunks[0].score < 0.10
