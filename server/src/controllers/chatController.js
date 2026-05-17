@@ -25,9 +25,11 @@ export const chatWithPdf = async (
         documentId
       );
 
+    console.log(chunks);
+
     if (
       !chunks.length ||
-      chunks[0].score < 0.35
+      chunks[0].score < 0.10
     ) {
       return res.status(200).json({
         answer:
